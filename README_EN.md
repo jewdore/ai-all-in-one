@@ -8,7 +8,7 @@
 - This open-source project is developed based on [ChenZhaoYu](https://github.com/Chanzhaoyu/chatgpt-web); it uses the midjourney API provided by [midjourney-proxy](https://github.com/novicezk/midjourney-proxy) and [Suno-API]  as the backend.
 
 ![cover](./docs/mj2a1.jpg)
-## Supported Features 
+## Supported Features
 - [x] Support Kling for text-to-video, image-to-video, and drawing.
 - [x] Support Ideogram for drawing.
 - [x] Support Runway for text-to-video and image-to-video.
@@ -19,7 +19,7 @@
 - [x] All original ChatGPT web features
 - [x] ChatGPT web supports custom API keys and base_url
 - [x] Midjourney text-to-image
-- [x] Midjourney blend image + text-to-image  
+- [x] Midjourney blend image + text-to-image
 - [X] Midjourney image variations U1 to U4, V1 to V4, and redrawing
 - [X] Midjourney partial redrawing
 - [X] Midjourney 1.5x and 2x zoom
@@ -89,7 +89,7 @@
 | CUSTOM_VISION_MODELS  | Custom vision models separated by `,` |  Empty | ✅ |  ✅|
 
 ## Docker Deployment
- 
+
 > - [x] Requires [midjourney-proxy](https://github.com/novicezk/midjourney-proxy) support
 > - [x] Requires [Suno-API]  support
 
@@ -104,9 +104,9 @@ docker run --name chatgpt-web-midjourney-proxy  -d -p 6015:3002 \
 
 pt-web-midjourney-proxy
 ```
-Access http://ip:6015 
+Access http://ip:6015
 
-**File Upload**: 
+**File Upload**:
 ```bash
 docker run --name chatgpt-web-midjourney-proxy  -d -p 6015:3002 \
 -e OPENAI_API_KEY=sk-xxxxx \
@@ -143,7 +143,7 @@ docker run -d --name mj6013  -p 6013:8080  \
 ### Custom Server API Key, Base_URL:
 ![base_url](./docs/gptbase.jpg)
 
-### GPTS  GTP Store 
+### GPTS  GTP Store
 ![multimodal](./docs/gpts.jpg)
 ![multimodal](./docs/gpts1.jpg)
 
@@ -214,21 +214,4 @@ docker run --name chatgpt-web-midjourney-proxy  -d -p 6015:3002 \
 ## License
 MIT © [Dooy](./license)
 
-## Others
-If you find this project helpful, please consider giving it a star or donating to us.
 
-[![Star History Chart](https://api.star-history.com/svg?repos=Dooy/chatgpt-web-midjourney-proxy&type=Date)](https://star-history.com/#Dooy/chatgpt-web-midjourney-proxy&Date)
-
-## Donations
-If my open-source project is helpful to you, please consider sponsoring me through any of the following methods: 
-<br> `Payment remarks with your contact information`
-<div style="display: flex; flex-wrap: wrap">
-    <div style="width:200px">
-        <img src="./docs/wxpay.jpg"  style="width:200px">
-        <div>WeChat Donation</div>
-    </div>
-    <div style="width:200px">
-        <img src="./docs/alipay.jpg"  style="width:200px"> 
-        <div>Alipay Donation</div>
-    </div>
-</div>
