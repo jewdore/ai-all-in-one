@@ -11,7 +11,7 @@ function getHeaderAuthorization(){
         const  vtokenh={ 'x-vtoken':  homeStore.myData.vtoken ,'x-ctoken':  homeStore.myData.ctoken};
         headers= {...headers, ...vtokenh}
     }
-    if(!gptServerStore.myData.KLING_KEY){ 
+    if(!gptServerStore.myData.KLING_KEY){
         const authStore = useAuthStore()
         if( authStore.token ) {
             const bmi= { 'x-ptoken':  authStore.token };
@@ -29,11 +29,11 @@ function getHeaderAuthorization(){
 
 export const  getUrl=(url:string)=>{
     if(url.indexOf('http')==0) return url;
-    
+
     const pro_prefix= '';//homeStore.myData.is_luma_pro?'/pro':''
     url= url.replaceAll('/pro','')
     if(gptServerStore.myData.KLING_SERVER  ){
-      
+
         return `${ gptServerStore.myData.KLING_SERVER}${pro_prefix}/kling${url}`;
     }
     return `${pro_prefix}/kling${url}`;
@@ -43,14 +43,14 @@ export const  getUrl=(url:string)=>{
 export const klingFetch=(url:string,data?:any,opt2?:any )=>{
     mlog('runwayFetch', url  );
     let headers= opt2?.upFile?{}: {'Content-Type':'application/json'}
-     
+
     if(opt2 && opt2.headers ) headers= opt2.headers;
 
     headers={...headers,...getHeaderAuthorization()}
-   
+
     return new Promise<any>((resolve, reject) => {
         let opt:RequestInit ={method:'GET'};
-       
+
         opt.headers= headers ;
         if(opt2?.upFile ){
              opt.method='POST';
@@ -62,24 +62,24 @@ export const klingFetch=(url:string,data?:any,opt2?:any )=>{
         }
         fetch(getUrl(url),  opt )
         .then( async (d) =>{
-            if (!d.ok) { 
+            if (!d.ok) {
                 let msg = '发生错误: '+ d.status
-                try{ 
+                try{
                   let bjson:any  = await d.json();
-                  msg = '('+ d.status+')发生错误: '+(bjson?.error?.message??'' ) 
-                }catch( e ){ 
+                  msg = '('+ d.status+')发生错误: '+(bjson?.error?.message??'' )
+                }catch( e ){
                 }
                 homeStore.myData.ms &&  homeStore.myData.ms.error(msg )
                 throw new Error( msg );
             }
-     
-            d.json().then(d=> resolve(d)).catch(e=>{ 
-            
+
+            d.json().then(d=> resolve(d)).catch(e=>{
+
                 homeStore.myData.ms &&  homeStore.myData.ms.error('发生错误'+ e )
-                reject(e) 
+                reject(e)
             }
         )})
-        .catch(e=>{ 
+        .catch(e=>{
             if (e.name === 'TypeError' && e.message === 'Failed to fetch') {
                 homeStore.myData.ms &&  homeStore.myData.ms.error('跨域|CORS error'  )
             }
@@ -95,7 +95,7 @@ export const klingFeed= async(id:string,cat:string,prompt:string)=>{
     const sunoS = new klingStore();
     let url= '/v1/images/generations/' //images或videos
     if (cat=='text2video'){
-        url='/v1/videos/text2video/';
+        url='/kling/v1/videos/text2video/';
     }
     if(cat=='image2video'){
         url='/v1/videos/image2video/';
@@ -103,7 +103,7 @@ export const klingFeed= async(id:string,cat:string,prompt:string)=>{
     url= url+id;
     for(let i=0; i<200;i++){
         try{
-            
+
             let a= await klingFetch( url )
             let task= a  as KlingTask;
             task.last_feed=new Date().getTime()

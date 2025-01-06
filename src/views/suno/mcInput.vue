@@ -35,7 +35,7 @@ const mvOption= [
  ]
 
 const canPost = computed(() => {
-   // return true; 
+   // return true;
     if( st.value.isLoading ) return false;
     if( st.value.type=='custom'){
         return cs.value.tags && cs.value.title
@@ -57,7 +57,7 @@ const generateLyrics= ()=>{
     let prompt = cs.value.prompt || cs.value.title;
     if (!prompt){
         ms.error(   t('suno.inputly') )
-        return 
+        return
     }
     if(st.value.isLoading) {
          ms.info( t('suno.doingly'));
@@ -68,15 +68,15 @@ const generateLyrics= ()=>{
     sunoFetch(  '/generate/lyrics/' ,  {prompt}).then(async (r:any )=>{
         mlog('lyrics', r);
         let dz:any = await lyricsFetch( r.id );
-        
+
          mlog('lyrics rz =>', dz );
-        if(dz!=null){  
+        if(dz!=null){
 
             cs.value.prompt= dz.text;
             cs.value.title= dz.title;
         }else{
             ms.error( t('suno.lyricsFail') );
-           
+
         }
         st.value.isLoading =false;
 
@@ -87,9 +87,9 @@ const generateLyrics= ()=>{
 const generate= async ()=>{
     st.value.isLoading =false;
     let ids:string[]=[];
-     
 
-    if(st.value.type=='custom'){ 
+
+    if(st.value.type=='custom'){
         if(des.value.make_instrumental) cs.value.prompt='';
         if( cs.value.continue_clip_id!=''  ){
             //chirp-v3-5-upload
@@ -97,7 +97,7 @@ const generate= async ()=>{
            if( exSuno.value?.metadata?.type=='upload') cs.value.task='upload_extend'
            else cs.value.task='extend'
         }
-        let r:any= await sunoFetch(  '/generate' ,  cs.value ) 
+        let r:any= await sunoFetch(  '/v1/song/create' ,  cs.value )
         st.value.isLoading =false;
 
        ids=r.clips.map((r:any)=>r.id);
@@ -105,8 +105,8 @@ const generate= async ()=>{
        if( cs.value.mv='chirp-v3-5-upload' ) cs.value.mv='chirp-v4'
     }else{
         des.value.prompt=cs.value.title;
-        let r:any= await sunoFetch(  '/generate/description-mode' ,  des.value )  
-        st.value.isLoading =false; 
+        let r:any= await sunoFetch(  '/generate/description-mode' ,  des.value )
+        st.value.isLoading =false;
         ids=r.clips.map((r:any)=>r.id);
     }
     cs.value.task='';
@@ -121,17 +121,17 @@ watch(()=>homeStore.myData.act, (n)=>{
     if(n=='suno.extend'){
         mlog("suno.extend", homeStore.myData.actData )
         const s= homeStore.myData.actData as SunoMedia
-        exSuno.value= s 
+        exSuno.value= s
         cs.value.continue_clip_id= s.id
-        cs.value.continue_at= Math.ceil(s.metadata.duration/2) 
+        cs.value.continue_at= Math.ceil(s.metadata.duration/2)
     }
 });
 
 </script>
 <template>
-<div class="p-2"> 
+<div class="p-2">
     <n-tabs type="segment" animated  v-model:value="st.type">
-        <!-- <n-tab-pane name="start" tab=""> 
+        <!-- <n-tab-pane name="start" tab="">
 
         </n-tab-pane> -->
         <!-- <NText depth="3" class="text-center">{{ $t('suno.mic') }}</NText> -->
@@ -145,7 +145,7 @@ watch(()=>homeStore.myData.act, (n)=>{
             </div>
             <div  class="pt-4 flex justify-between">
                 <div>{{$t('suno.desc')}}:</div>
-                <div> 
+                <div>
                     <n-switch v-model:value="des.make_instrumental" size="small">
                         <template #checked>
                          {{ $t('suno.noneedly') }}
@@ -156,9 +156,9 @@ watch(()=>homeStore.myData.act, (n)=>{
                     </n-switch>
                 </div>
             </div>
-            <div  class="pt-1"> 
+            <div  class="pt-1">
             <n-input v-model:value="des.gpt_description_prompt" :disabled="des.make_instrumental"
-                :placeholder="$t('suno.descpls')"  type="textarea"  size="small"   
+                :placeholder="$t('suno.descpls')"  type="textarea"  size="small"
                 :autosize="{ minRows: 3, maxRows: 12  }"  />
             </div>
             <div  class="pt-1">
@@ -185,7 +185,7 @@ watch(()=>homeStore.myData.act, (n)=>{
                                 <div class="cursor-pointer" @click="cs.tags= randStyle()"><SvgIcon  icon="fa:random" class="w-4 h-4" /></div>
                             </template>
                             <div>{{$t('suno.rank')}}</div>
-                            
+
                         </n-tooltip>
                     </template>
                 </n-input>
@@ -193,7 +193,7 @@ watch(()=>homeStore.myData.act, (n)=>{
 
             <div  class="pt-4 flex justify-between">
                 <div>{{$t('suno.ly')}} :</div>
-                <div> 
+                <div>
                     <n-switch v-model:value="des.make_instrumental" size="small">
                         <template #checked>
                         {{ $t('suno.noneedly') }}
@@ -204,9 +204,9 @@ watch(()=>homeStore.myData.act, (n)=>{
                     </n-switch>
                 </div>
             </div>
-            <div  class="pt-1"> 
+            <div  class="pt-1">
                 <n-input v-model:value="cs.prompt" :disabled="des.make_instrumental"
-                :placeholder="$t('suno.lypls')" type="textarea"  size="small"   
+                :placeholder="$t('suno.lypls')" type="textarea"  size="small"
                 :autosize="{ minRows: 3, maxRows: 12  }"  />
             </div>
             <div  class="pt-1">
@@ -236,7 +236,7 @@ watch(()=>homeStore.myData.act, (n)=>{
                                 </template>
                             </n-image>
                         </div>
-                        <div class="flex-1  pl-2"> 
+                        <div class="flex-1  pl-2">
                             <div class="flex justify-between line-clamp-1 w-full cursor-pointer"  >
                                 <h3>{{exSuno.title}}</h3>
                                 <!-- <div class="opacity-80"  >{{exSuno.metadata.tags}}</div> -->
@@ -248,7 +248,7 @@ watch(()=>homeStore.myData.act, (n)=>{
                             {{$t('suno.noly')}}
                             </div>
                             <div class="text-right text-[14px] flex justify-end items-center space-x-2  ">
-                            
+
                                 <div v-if="exSuno.status=='error'" class="text-[8px] flex items-center border-[1px] border-red-500/80 px-1 list-none rounded-md ">失败</div>
                                 <template v-if="exSuno.metadata && exSuno.metadata.duration">
                                     <div class="text-[8px] flex items-center border-[1px] border-gray-500/30 px-1 list-none rounded-md" > {{exSuno.metadata.duration.toFixed(1)}}s</div>
@@ -269,10 +269,10 @@ watch(()=>homeStore.myData.act, (n)=>{
                   <!-- <NTag v-if="st.type=='custom'" type="success" size="small" round  ><span class="cursor-pointer" @click="generateLyrics()" >上传音频</span></NTag> -->
                   <mcUploaderMp3 v-if="st.type=='custom'"/>
             </div>
-            <NButton type="primary" :disabled="!canPost" @click="generate()"><SvgIcon icon="ri:music-fill"  /> {{$t('suno.generate')}}</NButton> 
+            <NButton type="primary" :disabled="!canPost" @click="generate()"><SvgIcon icon="ri:music-fill"  /> {{$t('suno.generate')}}</NButton>
         </div>
-        
-       
+
+
     </div>
     <div v-if="st.type=='custom'" class="pt-4 text-[12px]" v-html="t('suno.info')"> </div>
 

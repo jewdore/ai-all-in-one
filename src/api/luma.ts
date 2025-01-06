@@ -30,7 +30,7 @@ function getHeaderAuthorization(){
 
 const getUrl=(url:string)=>{
     if(url.indexOf('http')==0) return url;
-    
+
     const pro_prefix= url.indexOf('/pro')>-1?'/pro':'';//homeStore.myData.is_luma_pro?'/pro':''
     url= url.replaceAll('/pro','')
     if(gptServerStore.myData.LUMA_SERVER){
@@ -39,7 +39,7 @@ const getUrl=(url:string)=>{
         }
         return `${ gptServerStore.myData.LUMA_SERVER}${pro_prefix}/luma${url}`;
     }
-    return `${pro_prefix}/luma${url}`;
+    return `${pro_prefix}/v1/lumavip${url}`;
 }
 
 export const lumaFetch=(url:string,data?:any,opt2?:any )=>{
@@ -48,10 +48,10 @@ export const lumaFetch=(url:string,data?:any,opt2?:any )=>{
     if(opt2 && opt2.headers ) headers= opt2.headers;
 
     headers={...headers,...getHeaderAuthorization()}
-   
+
     return new Promise<any>((resolve, reject) => {
         let opt:RequestInit ={method:'GET'};
-       
+
         opt.headers= headers ;
         if(opt2?.upFile ){
              opt.method='POST';
@@ -63,24 +63,24 @@ export const lumaFetch=(url:string,data?:any,opt2?:any )=>{
         }
         fetch(getUrl(url),  opt )
         .then( async (d) =>{
-            if (!d.ok) { 
+            if (!d.ok) {
                 let msg = '发生错误: '+ d.status
-                try{ 
+                try{
                   let bjson:any  = await d.json();
-                  msg = '('+ d.status+')发生错误: '+(bjson?.error?.message??'' ) 
-                }catch( e ){ 
+                  msg = '('+ d.status+')发生错误: '+(bjson?.error?.message??'' )
+                }catch( e ){
                 }
                 homeStore.myData.ms &&  homeStore.myData.ms.error(msg )
                 throw new Error( msg );
             }
-     
-            d.json().then(d=> resolve(d)).catch(e=>{ 
-            
+
+            d.json().then(d=> resolve(d)).catch(e=>{
+
                 homeStore.myData.ms &&  homeStore.myData.ms.error('发生错误'+ e )
-                reject(e) 
+                reject(e)
             }
         )})
-        .catch(e=>{ 
+        .catch(e=>{
             if (e.name === 'TypeError' && e.message === 'Failed to fetch') {
                 homeStore.myData.ms &&  homeStore.myData.ms.error('跨域|CORS error'  )
             }
@@ -98,7 +98,7 @@ export const FeedLumaTask= async(id:string)=>{
     const hk= new lumaHkStore();
     const hkObj= hk.getOneById(id)
     for(let i=0; i<120;i++){
-        let url= '/generations/'+id;
+        let url= '/task?id='+id;
         if(hkObj && hkObj.isHK ) url= '/pro/generations/'+id;
 
         let d:LumaMedia = await lumaFetch( url );
@@ -106,7 +106,7 @@ export const FeedLumaTask= async(id:string)=>{
             d.last_feed = new Date().getTime()
             lumaS.save(d);
             homeStore.setMyData({act:'FeedLumaTask'});
-            if( d.state=='completed' && d.video && d.video?.download_url  ){ //有的时候  completed 但是 没链接
+            if( d.state=='completed' && d.video && d.video?.url  ){ //有的时候  completed 但是 没链接
                 break;
             }
         }

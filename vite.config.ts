@@ -57,13 +57,13 @@ export default defineConfig((env) => {
         },
          '/sunoapi': {
           target: viteEnv.VITE_APP_API_BASE_URL,
-          changeOrigin: true, // 允许跨域  
+          changeOrigin: true, // 允许跨域
         },
          '/uploads': {
           target: viteEnv.VITE_APP_API_BASE_URL,
           changeOrigin: true, // 允许跨域
           //rewrite: path => path.replace('/api/', '/'),
-        }, 
+        },
         '/openapi': {
           target: viteEnv.VITE_APP_API_BASE_URL,
           changeOrigin: true, // 允许跨域
@@ -73,7 +73,7 @@ export default defineConfig((env) => {
           target: viteEnv.VITE_APP_API_BASE_URL,
           changeOrigin: true, // 允许跨域
           //rewrite: path => path.replace('/api/', '/'),
-        }, 
+        },
         //
         '/viggle': {
           target: viteEnv.VITE_APP_API_BASE_URL,
@@ -85,7 +85,17 @@ export default defineConfig((env) => {
           changeOrigin: true, // 允许跨域
           //rewrite: path => path.replace('/api/', '/'),
         },
-        
+        '/kling': {
+          target: viteEnv.VITE_APP_API_BASE_URL,
+          changeOrigin: true, // 允许跨域
+          //rewrite: path => path.replace('/api/', '/'),
+        },
+        '/v1/lumavip': {
+          target: viteEnv.VITE_APP_API_BASE_URL,
+          changeOrigin: true, // 允许跨域
+          //rewrite: path => path.replace('/api/', '/'),
+        },
+
       },
     },
     build: {
