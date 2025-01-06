@@ -1,0 +1,30 @@
+version: '3.3'
+
+services:
+  gptweb:
+    container_name: allinone
+    image: allinone:latest # 总是使用latest,更新时重新pull该tag镜像即可
+    ports:
+      - 6050:3002
+    restart: always
+    environment:
+      TZ: Asia/Shanghai # 指定时区
+      OPENAI_API_KEY: sk-Xgj80hmm1aPeeOLt86F9455135Bf4fD99c6eCb3b117d1e6e
+      OPENAI_API_BASE_URL: https://api.zyai.online/
+
+      MJ_SERVER: https://api.zyai.online/
+      MJ_API_SECRET: sk-Xgj80hmm1aPeeOLt86F9455135Bf4fD99c6eCb3b117d1e6e
+
+      SUNO_SERVER: https://api.zyai.online/
+      SUNO_KEY: sk-Xgj80hmm1aPeeOLt86F9455135Bf4fD99c6eCb3b117d1e6e
+
+      KLING_SERVER: https://api.zyai.online/
+      KLING_KEY: sk-Xgj80hmm1aPeeOLt86F9455135Bf4fD99c6eCb3b117d1e6e
+
+      LUMA_SERVER: https://api.zyai.online/
+      LUMA_KEY: sk-Xgj80hmm1aPeeOLt86F9455135Bf4fD99c6eCb3b117d1e6e
+
+      HIDE_SERVER: true
+      AUTH_SECRET_KEY: abcdefg
+
+      SYS_THEME: light

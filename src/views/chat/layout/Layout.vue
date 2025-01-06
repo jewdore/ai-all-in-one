@@ -6,11 +6,12 @@ import Sider from './sider/index.vue'
 import Permission from './Permission.vue'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { gptConfigStore, homeStore, useAppStore, useAuthStore, useChatStore } from '@/store'
-import { aiSider,aiFooter} from '@/views/mj' 
-import aiMobileMenu from '@/views/mj/aiMobileMenu.vue'; 
+import { aiSider,aiFooter} from '@/views/mj'
+import aiMobileMenu from '@/views/mj/aiMobileMenu.vue';
 import { t } from '@/locales'
 import { mlog, openaiSetting } from '@/api'
 import { isObject } from '@/utils/is'
+import Email from "@/views/chat/components/Login/email.vue";
 
 const router = useRouter()
 const appStore = useAppStore()
@@ -20,20 +21,20 @@ const authStore = useAuthStore()
 const rt = useRoute();
 const ms = useMessage();
 openaiSetting( rt.query, ms )
-if(rt.name =='GPTs'){ 
+if(rt.name =='GPTs'){
   let model= `gpt-4-gizmo-${rt.params.gid.toString()}`  ;
   gptConfigStore.setMyData({model:model});
   ms.success(`GPTs ${t('mj.modleSuccess')}`);
-}else if(rt.name=='Setting'){ 
+}else if(rt.name=='Setting'){
   openaiSetting( rt.query,ms );
-  if(isObject( rt.query ))  ms.success( t('mj.setingSuccess') ); 
-}else if(rt.name=='Model'){ 
+  if(isObject( rt.query ))  ms.success( t('mj.setingSuccess') );
+}else if(rt.name=='Model'){
   let model= `${rt.params.gid.toString()}`  ;
   gptConfigStore.setMyData({model:model});
   ms.success( t('mj.modleSuccess') );
 }
 
- 
+
 
 router.replace({ name: 'Chat', params: { uuid: chatStore.active } })
 homeStore.setMyData({local:'Chat'});
@@ -44,7 +45,7 @@ const collapsed = computed(() => appStore.siderCollapsed)
 
 const needPermission = computed(() => {
 //mlog( 'Layout token',  authStore.token   )
-   
+
  return  !!authStore.session?.auth && !authStore.token
 })
 
@@ -59,7 +60,7 @@ const getContainerClass = computed(() => {
     'h-full',
     { 'abc': !isMobile.value && !collapsed.value },
   ]
-}) 
+})
 </script>
 
 <template>
@@ -75,9 +76,10 @@ const getContainerClass = computed(() => {
         </NLayoutContent>
       </NLayout>
     </div>
-    <Permission :visible="needPermission" />
+<!--    <Permission :visible="needPermission" />-->
+    <Email :visible="needPermission"></Email>
   </div>
-   <aiMobileMenu v-if="isMobile"   /> 
+   <aiMobileMenu v-if="isMobile"   />
 
   <aiFooter/>
 </template>

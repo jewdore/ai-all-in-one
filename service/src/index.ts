@@ -2,7 +2,7 @@ import express from 'express'
 import type { RequestProps } from './types'
 import type { ChatMessage } from './chatgpt'
 import { chatConfig, chatReplyProcess, currentModel } from './chatgpt'
-import { auth, authV2, mlog, regCookie, turnstileCheck, verify } from './middleware/auth'
+import {auth, authV2, login, mlog, regCookie, turnstileCheck, verify} from './middleware/auth'
 import { limiter } from './middleware/limiter'
 import { isNotEmptyString,formattedDate } from './utils/is'
 import multer from "multer"
@@ -135,6 +135,7 @@ router.post('/session', async (req, res) => {
 })
 
 router.post('/verify', verify)
+router.post('/login', login)
 router.get('/reg', regCookie )
 
  const API_BASE_URL = isNotEmptyString(process.env.OPENAI_API_BASE_URL)

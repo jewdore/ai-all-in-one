@@ -9,6 +9,7 @@ export default {
     save: '保存',
     saveSuccess: '保存成功',
     reset: '重置',
+    logout: '登出',
     action: '操作',
     export: '导出',
     exportSuccess: '导出成功',
@@ -54,7 +55,7 @@ export default {
   },
   setting: {
     setting: '设置',
-    general: '总览',
+    general: '我的',
     advanced: '高级',
     config: '配置',
     avatarLink: '头像链接',

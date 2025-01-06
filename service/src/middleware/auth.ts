@@ -14,7 +14,7 @@ export const mlog =(...arg)=>{
   //const M_DEBUG = process.env.M_DEBUG
   // if(['error','log'].indexOf( arg[0] )>-1 ){ //必须显示的
   // }else  if(! isNotEmptyString(process.env.M_DEBUG) ) return ;
-  
+
   const currentDate = new Date();
   const hours = currentDate.getHours().toString().padStart(2, '0');
   const minutes = currentDate.getMinutes().toString().padStart(2, '0');
@@ -29,7 +29,7 @@ export const verify=  async ( req :Request , res:Response ) => {
     const { token } = req.body as { token: string }
     if (!token)
       throw new Error('Secret key is empty')
-    
+
     const auth_secret_keys = process.env.AUTH_SECRET_KEY? process.env.AUTH_SECRET_KEY.trim().split(',').filter(item => item !== ''):[];
     if (!auth_secret_keys.includes(token))
       throw new Error('密钥无效 | Secret key is invalid')
@@ -41,8 +41,23 @@ export const verify=  async ( req :Request , res:Response ) => {
   }
 }
 
+export const login=  async ( req :Request , res:Response ) => {
+    try {
+        checkLimit( req, res );
+        const { username, password } = req.body as { username: string, password: string }
+        if (!username || !password)
+            throw new Error('用户名密码不能为空 | Username or password is empty')
+
+        clearLimit( req, res);
+        res.send({ status: 'Success', message: 'Verify successfully', data: {token: process.env.AUTH_SECRET_KEY} })
+    }
+    catch (error) {
+        res.send({ status: 'Fail', message: error.message, data: null })
+    }
+}
+
 export const auth = async ( req :Request , res:Response , next:NextFunction ) => {
-  
+
 
   const AUTH_SECRET_KEY = process.env.AUTH_SECRET_KEY
   if (isNotEmptyString(AUTH_SECRET_KEY)) {
@@ -53,7 +68,7 @@ export const auth = async ( req :Request , res:Response , next:NextFunction ) =>
       const auth_secret_keys = process.env.AUTH_SECRET_KEY? process.env.AUTH_SECRET_KEY.trim().split(',').filter(item => item !== ''):[];
       if (!Authorization || !auth_secret_keys.includes(Authorization.replace('Bearer ', '').trim()))
         throw new Error('Error: 无访问权限 | No access rights')
-      
+
       clearLimit( req, res);
       next()
     }
@@ -74,7 +89,7 @@ const checkLimit=  ( req :Request , res:Response )=>{
   if ( !isNotEmptyString( process.env.AUTH_SECRET_ERROR_COUNT )) {
     return ;
   }
-  
+
   const bTime = process.env.AUTH_SECRET_ERROR_TIME??10;
   // 允许的最大错误次数
   const maxErrorCount =  +process.env.AUTH_SECRET_ERROR_COUNT;
@@ -94,7 +109,7 @@ const checkLimit=  ( req :Request , res:Response )=>{
   ipErrorCount[ipAddress] = ipErrorCount[ipAddress]?(  ipErrorCount[ipAddress]+1) : 1;
   if (ipErrorCount[ipAddress] >= maxErrorCount) {
       bannedIPs[ipAddress] = Date.now() + banTime;
-  } 
+  }
 }
 const clearLimit=  ( req :Request , res:Response )=>{
   const ipAddress =getIp(req);
@@ -103,7 +118,7 @@ const clearLimit=  ( req :Request , res:Response )=>{
 }
 
 export const authV2 = async ( req :Request , res:Response , next:NextFunction ) => {
-  
+
   const AUTH_SECRET_KEY = process.env.AUTH_SECRET_KEY
   //const auth_secret_keys = AUTH_SECRET_KEY.trim().split(',').filter(item => item !== '');
   const auth_secret_keys = process.env.AUTH_SECRET_KEY? process.env.AUTH_SECRET_KEY.trim().split(',').filter(item => item !== ''):[];
@@ -118,7 +133,7 @@ export const authV2 = async ( req :Request , res:Response , next:NextFunction ) 
       next()
        //throw new Error('Error: 无访问权限 | No access rights')
     }
-    catch (error) { 
+    catch (error) {
       res.status(423);
       res.send({ code: 'token_check', message: error.message ?? 'Please authenticate.', data: null })
     }
@@ -162,22 +177,22 @@ export const turnstileCheck= async ( req :Request , res:Response , next:NextFunc
       const outcome:any = await result.json();
       //console.log('outcome>> ', outcome );
       if (!outcome.success)   throw new Error('无权限访问,请刷新重试 | No access rights by Turnstile')
-       
+
       next();
-    }catch (error) { 
+    }catch (error) {
       res.status(422);
       mlog( 'Turnstile_Error')
       res.send({ code: 'Turnstile_Error', message: error.message ?? 'Please authenticate.'  })
     }
-    
-    //throw new Error('Error: 无访问权限 | No access rights by Turnstile')
-   
 
-   
+    //throw new Error('Error: 无访问权限 | No access rights by Turnstile')
+
+
+
 }
 
 const getCookie=( time:string )=>{
-  return time+'_'+(md5(time + process.env.TURNSTILE_SECRET_KEY ).substring(0,10) );  
+  return time+'_'+(md5(time + process.env.TURNSTILE_SECRET_KEY ).substring(0,10) );
 }
 export const regCookie= async( req :Request , res:Response , next:NextFunction )=>{
   try{
@@ -199,25 +214,25 @@ export const regCookie= async( req :Request , res:Response , next:NextFunction )
       //console.log('outcome>> ', outcome );
       if (!outcome.success)   throw new Error('Turnstile 错误,请刷新重试 | No access rights by Turnstile')
       const now= `${ (Date.now()/1000).toFixed(0)}`;
-      
+
       res.status(200);
       //req.cookies.username;
       //res.cookie('gptmj',  getCookie( now ), { maxAge: 5*3600*1000, httpOnly: true });
       res.send({ok:'ok' ,ctoken: getCookie( now ) })
-    }catch (error) { 
+    }catch (error) {
       res.status(422);
        mlog('reg_cookie error ');
       res.send({ code: 'reg_cookie', message: error.message ?? 'Please authenticate.'  })
     }
 }
 
-const checkCookie= ( req :Request ):boolean=>{  
+const checkCookie= ( req :Request ):boolean=>{
    //console.log( 'cookies : ',  req.header('X-Ctoken')  );
-   if( ! req.header('X-Ctoken')) return false; 
+   if( ! req.header('X-Ctoken')) return false;
    const gptmj =  req.header('X-Ctoken') as string;
    if( gptmj==getCookie(  gptmj.split('_')[0]) ) {
      mlog('cookie ok ');
-     return true; 
+     return true;
    }
    return false;
 }

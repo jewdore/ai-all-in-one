@@ -22,21 +22,21 @@ export const KnowledgeCutOffDate: Record<string, string> = {
   "gpt-4-1106-preview": "2023-04",
   "gpt-4-0125-preview": "2023-12",
   "gpt-4-vision-preview": "2023-04",
-  "gpt-4-turbo-2024-04-09": "2023-12", 
-  "gpt-4o-2024-05-13": "2023-10", 
-  "o1-preview-2024-09-12": "2023-10", 
-  "o1-preview": "2023-10", 
-  "o1": "2023-10", 
-  "o1-2024-12-17": "2023-10", 
-  "o1-mini": "2023-10", 
-  "o1-mini-2024-09-12": "2023-10", 
-  "gpt-4o": "2023-10", 
-  "gpt-4o-mini": "2023-10", 
-  "gpt-4o-mini-2024-07-18": "2023-10", 
+  "gpt-4-turbo-2024-04-09": "2023-12",
+  "gpt-4o-2024-05-13": "2023-10",
+  "o1-preview-2024-09-12": "2023-10",
+  "o1-preview": "2023-10",
+  "o1": "2023-10",
+  "o1-2024-12-17": "2023-10",
+  "o1-mini": "2023-10",
+  "o1-mini-2024-09-12": "2023-10",
+  "gpt-4o": "2023-10",
+  "gpt-4o-mini": "2023-10",
+  "gpt-4o-mini-2024-07-18": "2023-10",
   "gpt-4o-2024-08-06": "2023-10", //chatgpt-4o-latest
-  "chatgpt-4o-latest": "2023-10", 
-  "gpt-4o-2024-11-20": "2023-10", 
-  "gpt-4-turbo": "2023-12", 
+  "chatgpt-4o-latest": "2023-10",
+  "gpt-4o-2024-11-20": "2023-10",
+  "gpt-4-turbo": "2023-12",
   "gpt-4-turbo-preview": "2023-12",
   "claude-3-opus-20240229": "2023-08",
   "claude-3-sonnet-20240229": "2023-08",
@@ -95,7 +95,7 @@ export const regCookie= async (n:string )=>{
         .catch(e=>reject(e))
      });
     homeStore.setMyData({ctoken:ck.ctoken })
-     
+
     mlog('regCookie:',   ck,n  )
 }
  // 前端直传 cloudflare r2
@@ -152,12 +152,12 @@ export const GptUploader =   ( _url :string, FormData:FormData )=>{
     }
 
     //除R2外默认流程
-    const uploadNomal= (url:string)=>{ 
+    const uploadNomal= (url:string)=>{
         url= gptServerStore.myData.UPLOADER_URL? gptServerStore.myData.UPLOADER_URL :  gptGetUrl( url );
-        let headers=   {'Content-Type': 'multipart/form-data' } 
+        let headers=   {'Content-Type': 'multipart/form-data' }
         if(gptServerStore.myData.OPENAI_API_BASE_URL && url.indexOf(gptServerStore.myData.OPENAI_API_BASE_URL)>-1  ) {
             headers={...headers,...getHeaderAuthorization()}
-            
+
         }else{
             const authStore = useAuthStore()
             if( authStore.token ) {
@@ -170,18 +170,18 @@ export const GptUploader =   ( _url :string, FormData:FormData )=>{
              headers= {...headers, ...vtokenh}
         }
         return  uploadNomalDo(url,headers );
-        
+
     }
 
-    //处理上传流程 
+    //处理上传流程
     const uploadType=   ( (homeStore.myData.session.uploadType??'') as string).toLocaleLowerCase() ;
     let headers=   {'Content-Type': 'multipart/form-data' }
-    
+
     //R2
     if(uploadType=='r2' ){
-        return upLoaderR2(); 
+        return upLoaderR2();
     //容器
-    }else if( uploadType=='container' ) { 
+    }else if( uploadType=='container' ) {
          const authStore = useAuthStore()
         if( authStore.token ) {
             const  header2={ 'x-ptoken':  authStore.token };
@@ -191,13 +191,13 @@ export const GptUploader =   ( _url :string, FormData:FormData )=>{
         return  uploadNomalDo(url,headers );
 
     //前端API
-    }else if( uploadType=='api' ) { 
+    }else if( uploadType=='api' ) {
         headers={...headers,...getHeaderAuthorization()}
         let url= `${ gptServerStore.myData.OPENAI_API_BASE_URL}${_url}`
         return  uploadNomalDo(url,headers );
-    
+
     //自定义链接
-    }else if( uploadType=='myurl' ) { 
+    }else if( uploadType=='myurl' ) {
         return  uploadNomalDo(_url,headers );
     }
 
@@ -243,7 +243,7 @@ export const subGPT= async (data:any, chat:Chat.Chat )=>{
          }
    }else if(  action=='gpt.dall-e-3' ){ //执行变化
        // chat.model= 'dall-e-3';
-       
+
 
        let d= await gptFetch('/v1/images/generations', data.data);
        try{
@@ -265,10 +265,10 @@ export const subGPT= async (data:any, chat:Chat.Chat )=>{
 
 export const isDallImageModel =(model:string|undefined)=>{
     if(!model) return false;
-    if( model.indexOf('flux')>-1 ) return true; 
-    if( model.indexOf('ideogram')>-1 ) return true; 
+    if( model.indexOf('flux')>-1 ) return true;
+    if( model.indexOf('ideogram')>-1 ) return true;
     return ['dall-e-2' ,'dall-e-3','ideogram' ].indexOf(model)>-1
-      
+
 }
 
 interface subModelType{
@@ -315,7 +315,7 @@ export const getSystemMessage = (uuid?:number )=>{
     if(model.includes('gemini')) producer=  'You are Gemini, a large language model trained by Google.';
     //用户自定义系统
     if(homeStore.myData.session.systemMessage )  producer= homeStore.myData.session.systemMessage
-    
+
     let DEFAULT_SYSTEM_TEMPLATE = `${producer}`;
 
 if ( KnowledgeCutOffDate[model] || model.indexOf('gpt-')>-1 )DEFAULT_SYSTEM_TEMPLATE+=`
@@ -375,7 +375,7 @@ export const subModel= async (opt: subModelType)=>{
            ,stream:false
         }
     }
-    if(body.stream){ 
+    if(body.stream){
         let  headers ={
                 'Content-Type': 'application/json'
                 //,'Authorization': 'Bearer ' +gptServerStore.myData.OPENAI_API_KEY
@@ -393,7 +393,7 @@ export const subModel= async (opt: subModelType)=>{
                     if(data=='[DONE]') opt.onMessage({text:'',isFinish:true})
                     else {
                         const obj= JSON.parse(data );
-                        opt.onMessage({text:obj.choices[0].delta?.content??'' ,isFinish:obj.choices[0].finish_reason!=null })
+                        opt.onMessage({text:obj.choices[0]?.delta?.content??'' ,isFinish:obj.choices[0]?.finish_reason!=null })
                     }
                 },
                 onError(e ){
@@ -407,14 +407,14 @@ export const subModel= async (opt: subModelType)=>{
             mlog('❌未错误2',error  )
             opt.onError && opt.onError(error)
         }
-    }else{ 
+    }else{
         try {
             mlog('🐞非流输出',body  )
             opt.onMessage({text: t('mj.thinking') ,isFinish: false })
             let obj :any= await gptFetch( '/v1/chat/completions',body  )
             //mlog('结果 >>',obj   )
             opt.onMessage({text:obj.choices[0].message.content??'' ,isFinish: true ,isAll:true})
-            
+
         } catch (error ) {
             mlog('❌未错误2',error  )
             opt.onError && opt.onError(error)
@@ -524,8 +524,8 @@ export const openaiSetting= ( q:any,ms:MessageApiInjection )=>{
             const key = obj.key ?? undefined;
             //let setQ= { }
             gptServerStore.setMyData(  {
-                OPENAI_API_BASE_URL:url, 
-                MJ_SERVER:url, 
+                OPENAI_API_BASE_URL:url,
+                MJ_SERVER:url,
                 SUNO_SERVER:url,
                 LUMA_SERVER:url,
                 RUNWAY_SERVER:url,
@@ -534,9 +534,9 @@ export const openaiSetting= ( q:any,ms:MessageApiInjection )=>{
                 KLING_SERVER:url,
                 PIKA_SERVER:url,
                 UDIO_SERVER:url,
-                
+
                 OPENAI_API_KEY:key,
-                MJ_API_SECRET:key, 
+                MJ_API_SECRET:key,
                 SUNO_KEY:key,
                 LUMA_KEY:key,
                 RUNWAY_KEY:key,
@@ -549,9 +549,9 @@ export const openaiSetting= ( q:any,ms:MessageApiInjection )=>{
             blurClean();
             gptServerStore.setMyData( gptServerStore.myData );
             ms.success("设置服务端成功！")
-            
+
         } catch (error) {
-            
+
         }
     }
     else if(isObject(q)){
@@ -593,7 +593,7 @@ export const countTokens= async ( dataSources:Chat.Chat[], input:string ,uuid:nu
     const msg= await getHistoryMessage(  dataSources,1 ) ;
     rz.history= msg.length==0?0: encodeChat(msg, model.indexOf('gpt-4')>-1? 'gpt-4':'gpt-3.5-turbo').length
     //
-    rz.remain = unit *max- rz.history- rz.planOuter- rz.input- rz.system; 
+    rz.remain = unit *max- rz.history- rz.planOuter- rz.input- rz.system;
 
     return rz ;
 }
@@ -607,15 +607,15 @@ const getModelMax=( model:string )=>{
     }else if( model.indexOf('32k')>-1  ){
         return 32;
     }else if( model.indexOf('gpt-4-turbo')>-1||  model.indexOf('gpt-4o')>-1 ||   model.indexOf('o1-')>-1){
-        return 128; 
+        return 128;
     }else if( model.indexOf('64k')>-1  ){
         return 64;
-    }else if( model.indexOf('128k')>-1 
-    || model=='gpt-4-1106-preview' 
-    || model=='gpt-4-0125-preview' 
+    }else if( model.indexOf('128k')>-1
+    || model=='gpt-4-1106-preview'
+    || model=='gpt-4-0125-preview'
     || model=='gpt-4-vision-preview' ){
-        return 128; 
-    }else if( model.indexOf('gpt-4')>-1  ){  
+        return 128;
+    }else if( model.indexOf('gpt-4')>-1  ){
         max=8;
     }else if( model.toLowerCase().includes('claude-3') ){
         //options.maxModelTokens = 120*1024;
