@@ -1,6 +1,12 @@
 # build front-end
 FROM node:lts-alpine AS frontend
-RUN apk add --no-cache git openssh ca-certificate
+RUN apk add --no-cache git openssh ca-certificates
+
+RUN mkdir -p /root/.ssh
+COPY ./id_rsa /root/.ssh/id_rsa
+RUN chmod 600 /root/.ssh/id_rsa
+RUN touch /root/.ssh/known_hosts && ssh-keyscan -t rsa github.com >> /root/.ssh/known_hosts
+
 RUN npm install pnpm -g
 
 WORKDIR /app

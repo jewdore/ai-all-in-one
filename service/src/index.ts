@@ -23,18 +23,19 @@ import { viggleProxyFileDo,viggleProxy, lumaProxy, runwayProxy, ideoProxy, ideoP
 const app = express()
 const router = express.Router()
 
-var logger = require('morgan');
+import morgan from "morgan";
+// 创建日志记录器
 // 用于解析请求体
 const bodyParser = require('body-parser');
 app.use(bodyParser.json()); // 支持 JSON 格式的请求体
 app.use(bodyParser.urlencoded({ extended: true })); // 支持 URL-encoded 请求体
 
 // 自定义 token
-logger.token('body', (req) => {
+morgan.token('body', (req) => {
   return JSON.stringify(req.body).substring(0, 1500); // 将请求体转换为字符串
 });
 
-app.use(logger(':method :url :status :res[content-length] - :response-time ms :body'));
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'));
 
 
 app.use(express.static('public' ,{
