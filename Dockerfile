@@ -23,7 +23,7 @@ RUN pnpm run build
 
 # build backend
 FROM node:lts-alpine as backend
-RUN apk add --no-cache git openssh ca-certificate
+RUN apk add --no-cache git openssh ca-certificates
 RUN npm install pnpm -g
 
 WORKDIR /app
@@ -40,7 +40,7 @@ RUN pnpm build
 
 # service
 FROM node:lts-alpine
-RUN apk add --no-cache git openssh ca-certificate
+RUN apk add --no-cache git openssh ca-certificates
 RUN npm install pnpm -g
 
 WORKDIR /app

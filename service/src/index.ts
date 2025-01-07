@@ -26,7 +26,6 @@ const router = express.Router()
 import morgan from "morgan";
 // 创建日志记录器
 // 用于解析请求体
-const bodyParser = require('body-parser');
 app.use(bodyParser.json()); // 支持 JSON 格式的请求体
 app.use(bodyParser.urlencoded({ extended: true })); // 支持 URL-encoded 请求体
 
