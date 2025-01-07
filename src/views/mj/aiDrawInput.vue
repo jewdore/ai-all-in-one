@@ -9,8 +9,8 @@ import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { SvgIcon } from '@/components/common'
 import { onMounted, ref, watch } from 'vue';
 import { gptServerStore } from '@/store';
-import { mlog } from '@/api';
-import { useRoute } from 'vue-router'; 
+import {isDisableMenu, mlog} from '@/api';
+import { useRoute } from 'vue-router';
 
 const route = useRoute(); // 获取当前路由对象
 
@@ -50,9 +50,9 @@ initLoad();
 </script>
 <template>
 <div class="overflow-y-auto bg-[#fafbfc] pt-2 dark:bg-[#18181c] h-full ">
- 
+
 <n-tabs type="line" animated :default-value="st.tab" @update:value="handleUpdateValue"  >
-    <n-tab-pane name="start" tab=""> 
+    <n-tab-pane name="start" tab="">
 
     </n-tab-pane>
     <n-tab-pane name="midjourney" tab="MidJourney" >
@@ -72,28 +72,28 @@ initLoad();
     </n-tabs>
 
     </n-tab-pane>
-    
+
     <n-tab-pane name="dall.e" tab="Dall.E">
      <div class="p-4"><aiDall  /></div>
     </n-tab-pane>
 
-    <n-tab-pane name="ideogram" tab="IdeoGram">
+    <n-tab-pane v-if="!isDisableMenu ( 'ideogram')" name="ideogram" tab="IdeoGram">
      <div class="p-2"> <aiIdeoInput/> </div>
-    </n-tab-pane> 
-    
+    </n-tab-pane>
+
 
 
     <n-tab-pane name="Close" v-if="isMobile" >
       <template #tab>
       <div class=" text-center flex justify-center items-center"   @click="$emit('close')"  ><SvgIcon icon="ri:close-circle-line"></SvgIcon></div>
       </template>
-      <div class="p-4"> 
+      <div class="p-4">
         <div   @click="$emit('close')" class=" justify-center items-center flex">
-            <SvgIcon icon="ri:close-circle-line"></SvgIcon> Close By Click me 
+            <SvgIcon icon="ri:close-circle-line"></SvgIcon> Close By Click me
         </div>
       </div>
     </n-tab-pane>
 
-</n-tabs> 
+</n-tabs>
 </div>
 </template>

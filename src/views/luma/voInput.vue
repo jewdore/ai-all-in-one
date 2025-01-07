@@ -1,10 +1,10 @@
-<script setup lang="ts"> 
+<script setup lang="ts">
 import { NTabs, NTabPane } from 'naive-ui';
 import LumaInput from './lumaInput.vue'
 import RunwayInput from './runInput.vue'
 import KlingInput from '../kling/kgInput.vue'
 import PikaInput from './pikaInput.vue'
-import { mlog } from '@/api';
+import {isDisableMenu, mlog} from '@/api';
 import { gptServerStore } from '@/store';
 import {  ref } from 'vue';
 import { useRoute } from 'vue-router';
@@ -20,7 +20,7 @@ const handleUpdateValue=(v:string)=>{
 const initLoad=()=>{
     if(route.query.tab){
         //st.value.tab=route.query.tab as string;
-        st.value.tab= 'luma' 
+        st.value.tab= 'luma'
         let tt= (route.query.tab as string).toLocaleLowerCase();
         if( ['luma','runway','pika','kling'].indexOf(tt)>-1 ){
            st.value.tab=tt;
@@ -40,13 +40,13 @@ initLoad();
     <n-tab-pane name="luma" tab="Luma">
         <LumaInput />
     </n-tab-pane>
-    <n-tab-pane name="runway" tab="Runway">
+    <n-tab-pane v-if="!isDisableMenu ( 'runway')" name="runway" tab="Runway">
         <RunwayInput />
     </n-tab-pane>
-    <n-tab-pane name="pika" tab="Pika">
+    <n-tab-pane v-if="!isDisableMenu ( 'pika')" name="pika" tab="Pika">
         <PikaInput />
     </n-tab-pane>
-    <n-tab-pane name="kling" :tab="$t('mj.kling')">
+    <n-tab-pane v-if="!isDisableMenu ( 'kling')" name="kling" :tab="$t('mj.kling')">
         <KlingInput />
     </n-tab-pane>
 </n-tabs>
