@@ -3,7 +3,7 @@ import { ref,computed ,onMounted, watch} from 'vue';
 import { NTabs ,NTabPane ,NInput,NSwitch ,NTooltip, NTag ,NButton, useMessage,NSelect, NImage, NSlider} from "naive-ui";
 import { SvgIcon } from '@/components/common';
 import { mlog } from '@/api';
-import { sunoFetch ,lyricsFetch, randStyle, FeedTask} from '@/api/suno';
+import {sunoFetch, lyricsFetch, randStyle, FeedTask, FeedTaskyun} from '@/api/suno';
 import { t } from '@/locales';
 import { homeStore } from '@/store';
 import { SunoMedia } from '@/api/sunoStore';
@@ -97,20 +97,21 @@ const generate= async ()=>{
            if( exSuno.value?.metadata?.type=='upload') cs.value.task='upload_extend'
            else cs.value.task='extend'
         }
-        let r:any= await sunoFetch(  '/v1/song/create' ,  cs.value )
+        let r:any= await sunoFetch(  '/suno/submit/music' ,  cs.value )
         st.value.isLoading =false;
-
-       ids=r.clips.map((r:any)=>r.id);
+        console.log(r, cs.value, des.value)
+       ids=[r.data];
        mlog('ids ', ids );
        if( cs.value.mv='chirp-v3-5-upload' ) cs.value.mv='chirp-v4'
     }else{
         des.value.prompt=cs.value.title;
-        let r:any= await sunoFetch(  '/generate/description-mode' ,  des.value )
+        let r:any= await sunoFetch(  '/suno/submit/music' ,  des.value )
         st.value.isLoading =false;
-        ids=r.clips.map((r:any)=>r.id);
+        ids=[r.data];
     }
     cs.value.task='';
-    FeedTask(ids)
+    FeedTaskyun(ids)
+
 }
 
 

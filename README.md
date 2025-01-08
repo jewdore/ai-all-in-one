@@ -8,10 +8,10 @@
 - 可以直接用 https://vercel.ddaiai.com 先体验
 
 ![cover](./docs/mj2a1.jpg)
-## 支持功能 
+## 支持功能
 - [x] 支持 udio 文生音乐
 - [x] 支持 pika  文生视频，图生视频
-- [x] 支持 openai realtime [点击观看.youtube](https://www.youtube.com/watch?v=pKvVi3oBRQU)  [B站](https://www.bilibili.com/video/BV1Kt22YPE2c/) 
+- [x] 支持 openai realtime [点击观看.youtube](https://www.youtube.com/watch?v=pKvVi3oBRQU)  [B站](https://www.bilibili.com/video/BV1Kt22YPE2c/)
 - [x] 支持 kling 可灵 文生视频，图生视频, 绘图
 - [x] 支持 ideogram 绘图
 - [x] 支持 runway 文生视频，图生视频
@@ -30,7 +30,7 @@
 - [X] 图片使用localforage实现本地存储
 - [X] 支持midjourney、niji 不同机器人
 - [X] 支持[InsightFace 人脸替换](https://discord.com/api/oauth2/authorize?client_id=1090660574196674713&permissions=274877945856&scope=bot)
-- [X] midjourney 混图、获取 seed 
+- [X] midjourney 混图、获取 seed
 - [X] chatgpt 前端支持自定义模型、上下文对话数、回复数
 - [X] chatgpt 支持图片上传图片 供gpt-4-vision-preview使用、gpts
 - [X] chatgpt 支持超链模型切换 https://vercel.ddaiai.com/#/m/gpt-4-all https://vercel.ddaiai.com/#/m/gpt-4-gizmo-g-2fkFE8rbu
@@ -44,7 +44,7 @@
 ## 无服务器-个人桌面安装
 > - [x] 请到 https://github.com/Dooy/chatgpt-web-midjourney-proxy/releases 下载最新版本安装(选择合适你操作系统的版本)
 > - [x] 选择一个合适的中转服务商( 最好都支持 `gpt`  `gpts` `midjourney` `claude`  `suno` `luma` `runway` `viggle` `flux` `ideogram` `kling` `pika`)
-> - [x] 中转服务商推荐 https://www.openai-hk.com 一个`key`和`api接口地址` 同时支持 [gpt](https://www.openai-hk.com/docs/getting-started.html) [gpts](https://www.openai-hk.com/docs/openai/gpts.html) [midjourney](https://www.openai-hk.com/docs/midjourney/guide.html) [claude](https://www.openai-hk.com/docs/lab/claude-3.html) [suno](https://www.openai-hk.com/docs/lab/suno-v3.html) [luma](https://www.openai-hk.com/docs/lab/luma-video.html) [runway](https://www.openai-hk.com/docs/lab/runway-video.html) [viggle](https://www.openai-hk.com/docs/lab/viggle-dance.html) [ideogram](https://www.openai-hk.com/docs/lab/ideogram.html) [flux](https://www.openai-hk.com/docs/lab/flux.html) [kling](https://www.openai-hk.com/docs/lab/kling.html) [pika](https://www.openai-hk.com/docs/lab/pika-video.html) [udio](https://www.openai-hk.com/docs/lab/udio-music.html)，mj-fast最低能到0.12rmb/张,`suno` 最低能到4分一首 
+> - [x] 中转服务商推荐 https://www.openai-hk.com 一个`key`和`api接口地址` 同时支持 [gpt](https://www.openai-hk.com/docs/getting-started.html) [gpts](https://www.openai-hk.com/docs/openai/gpts.html) [midjourney](https://www.openai-hk.com/docs/midjourney/guide.html) [claude](https://www.openai-hk.com/docs/lab/claude-3.html) [suno](https://www.openai-hk.com/docs/lab/suno-v3.html) [luma](https://www.openai-hk.com/docs/lab/luma-video.html) [runway](https://www.openai-hk.com/docs/lab/runway-video.html) [viggle](https://www.openai-hk.com/docs/lab/viggle-dance.html) [ideogram](https://www.openai-hk.com/docs/lab/ideogram.html) [flux](https://www.openai-hk.com/docs/lab/flux.html) [kling](https://www.openai-hk.com/docs/lab/kling.html) [pika](https://www.openai-hk.com/docs/lab/pika-video.html) [udio](https://www.openai-hk.com/docs/lab/udio-music.html)，mj-fast最低能到0.12rmb/张,`suno` 最低能到4分一首
 ![多模态](./docs/suno-ds.jpg)
 
 ## Vercel 一键部署
@@ -85,11 +85,11 @@
 | LUMA_SERVER |  LUMA API 接口地址  | [搭建参考](https://github.com/LumaAI-API/Luma-API) | ✅ |  ✅|
 | LUMA_KEY |  LUMA API 的key | 空  | ✅ |  ✅|
 
-  
+
 
 ## docker 部署
- 
-> - [x] 需 [midjourney-proxy](https://github.com/novicezk/midjourney-proxy) 或者[trueai](https://github.com/trueai-org/midjourney-proxy) 支持 
+
+> - [x] 需 [midjourney-proxy](https://github.com/novicezk/midjourney-proxy) 或者[trueai](https://github.com/trueai-org/midjourney-proxy) 支持
 > - [x] 需 Suno-API  支持
 > - [x] 需 [Luma-API](https://github.com/LumaAI-API/Luma-API)  支持
 
@@ -105,9 +105,9 @@ docker run --name chatgpt-web-midjourney-proxy  -d -p 6015:3002 \
 -e SUNO_SERVER=https://your-suno-server:8000  \
 -e SUNO_KEY=you-suno-key  ydlhero/chatgpt-web-midjourney-proxy
 ```
-访问 http://ip:6015 
+访问 http://ip:6015
 
-**文件上传**: 
+**文件上传**:
 ```bash
 docker run --name chatgpt-web-midjourney-proxy  -d -p 6015:3002 \
 -e OPENAI_API_KEY=sk-xxxxx \
@@ -143,14 +143,14 @@ docker run -d --name mj6013  -p 6013:8080  \
 ## 更多展示
 
 
-### Realtime 
+### Realtime
 
-[点击观看Realtime视频](https://www.youtube.com/watch?v=pKvVi3oBRQU) 
+[点击观看Realtime视频](https://www.youtube.com/watch?v=pKvVi3oBRQU)
 
 <div style="display: flex; flex-wrap: wrap">
- <img src="./docs/realtime-2.jpg" style="width:200px" > 
+ <img src="./docs/realtime-2.jpg" style="width:200px" >
 </div>
- 
+
 
 ### suno、udio 音乐AI制作
 ![suno](./docs/suno2.jpg)
@@ -163,7 +163,7 @@ docker run -d --name mj6013  -p 6013:8080  \
 ### 自定义服务端api key、base_url：
 ![base_url](./docs/gptbase.jpg)
 
-### GPTS  GTP Store 
+### GPTS  GTP Store
 ![多模态](./docs/gpts.jpg)
 ![多模态](./docs/gpts1.jpg)
 
@@ -228,25 +228,13 @@ docker run --name chatgpt-web-midjourney-proxy  -d -p 6015:3002 \
 -e AUTH_SECRET_KEY=你的英文密码 -e AUTH_SECRET_ERROR_COUNT=3 \
 -e AUTH_SECRET_ERROR_TIME=10 ydlhero/chatgpt-web-midjourney-proxy
 ```
-- 
+-
 ## License
 MIT © [Dooy](./license)
 
-## 其他
-如果觉得这个项目对您有所帮助，请帮忙点个star 或者捐助我们
-
-[![Star History Chart](https://api.star-history.com/svg?repos=Dooy/chatgpt-web-midjourney-proxy&type=Date)](https://star-history.com/#Dooy/chatgpt-web-midjourney-proxy&Date)
-
-## 捐助
-如果我的开源项目对你有帮助，请考虑通过以下任意一种方式赞助: 
-<br> `付款备注上您的联系方式`
-<div style="display: flex; flex-wrap: wrap">
-    <div style="width:200px">
-        <img src="./docs/wxpay.jpg"  style="width:200px">
-        <div>微信捐助</div>
-    </div>
-    <div style="width:200px">
-        <img src="./docs/alipay.jpg"  style="width:200px"> 
-        <div>支付宝捐助</div>
-    </div>
-</div>
+## 项目计划
+- [x] 支持suno，隐藏udio
+- [ ] 模型支持tag
+- [ ] o1-mini 输出不是流模式
+- [ ] luma 上传图片413
+- [ ] 每个tab都加一个 当前输入框的缓存

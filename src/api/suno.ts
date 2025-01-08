@@ -1,6 +1,6 @@
 import { gptServerStore,homeStore,useAuthStore } from "@/store";
 import { mlog } from "./mjapi";
-import { sunoStore,SunoMedia } from "./sunoStore";  
+import { sunoStore,SunoMedia } from "./sunoStore";
 
 const getUrl=(url:string)=>{
     if(url.indexOf('http')==0) return url;
@@ -44,16 +44,16 @@ export const lyricsFetch= async ( lid:string)=>{
         if(dt.status=='complete') return dt ;
         if( dt.status=='error') return null;
         await sleep( time*1000 )
-        
+
     }
     return null;
-   
+
 }
 
 export function randStyle(): string {
     const s: string[] = ["acoustic", "aggressive", "anthemic", "atmospheric", "bouncy", "chill", "dark", "dreamy", "electronic", "emotional", "epic", "experimental", "futuristic", "groovy", "heartfelt", "infectious", "melodic", "mellow", "powerful", "psychedelic", "romantic", "smooth", "syncopated", "uplifting", ""];
     const l: string[] = ["afrobeat", "anime", "ballad", "bedroom pop", "bluegrass", "blues", "classical", "country", "cumbia", "dance", "dancepop", "delta blues", "electropop", "disco", "dream pop", "drum and bass", "edm", "emo", "folk", "funk", "future bass", "gospel", "grunge", "grime", "hip hop", "house", "indie", "j-pop", "jazz", "k-pop", "kids music", "metal", "new jack swing", "new wave", "opera", "pop", "punk", "raga", "rap", "reggae", "reggaeton", "rock", "rumba", "salsa", "samba", "sertanejo", "soul", "synthpop", "swing", "synthwave", "techno", "trap", "uk garage"];
-    
+
     const randomS: string = s[Math.floor(Math.random() * s.length)];
     const randomL: string = l[Math.floor(Math.random() * l.length)];
     // const randomS2: string = s[Math.floor(Math.random() * s.length)];
@@ -65,7 +65,7 @@ export function randStyle(): string {
 export const FeedTask= async (ids:string[])=>{
     const sunoS = new sunoStore();
     if(ids.length<=0) return;
-    
+
     let d:any[] = await sunoFetch('/feed/'+ ids.join(','));
     mlog('FeedTask',d )
     d.forEach( (item:SunoMedia) =>{
@@ -81,16 +81,34 @@ export const FeedTask= async (ids:string[])=>{
 }
 
 
+export const FeedTaskyun= async (ids:string[])=>{
+    const sunoS = new sunoStore();
+    if(ids.length<=0) return;
+
+    let resp:any = await sunoFetch('/suno/fetch/'+ ids.join(','));
+    mlog('FeedTask',resp )
+    if (resp.code!="success" || resp.data.status !== "SUCCESS"){
+        homeStore.setMyData({act:'FeedTask'});
+        await sleep(5*1020 );
+        FeedTaskyun(ids)
+        return;
+    }
+    homeStore.setMyData({act:'FeedTask'});
+    resp.data.data.forEach( (item:SunoMedia) =>{
+        sunoS.save( item)
+    });
+}
+
 export const sunoFetch=(url:string,data?:any,opt2?:any )=>{
     mlog('sunoFetch', url  );
     let headers= {'Content-Type':'application/json'}
     if(opt2 && opt2.headers ) headers= opt2.headers;
 
     headers={...headers,...getHeaderAuthorization()}
-   
+
     return new Promise<any>((resolve, reject) => {
         let opt:RequestInit ={method:'GET'};
-       
+
         opt.headers= headers ;
         if(opt2?.upFile ){
              opt.method='POST';
@@ -102,24 +120,24 @@ export const sunoFetch=(url:string,data?:any,opt2?:any )=>{
         }
         fetch(getUrl(url),  opt )
         .then( async (d) =>{
-            if (!d.ok) { 
+            if (!d.ok) {
                 let msg = '发生错误: '+ d.status
-                try{ 
+                try{
                   let bjson:any  = await d.json();
-                  msg = '('+ d.status+')发生错误: '+(bjson?.error?.message??'' ) 
-                }catch( e ){ 
+                  msg = '('+ d.status+')发生错误: '+(bjson?.error?.message??'' )
+                }catch( e ){
                 }
                 homeStore.myData.ms &&  homeStore.myData.ms.error(msg )
                 throw new Error( msg );
             }
-     
-            d.json().then(d=> resolve(d)).catch(e=>{ 
-            
+
+            d.json().then(d=> resolve(d)).catch(e=>{
+
                 homeStore.myData.ms &&  homeStore.myData.ms.error('发生错误'+ e )
-                reject(e) 
+                reject(e)
             }
         )})
-        .catch(e=>{ 
+        .catch(e=>{
             if (e.name === 'TypeError' && e.message === 'Failed to fetch') {
                 homeStore.myData.ms &&  homeStore.myData.ms.error('跨域|CORS error'  )
             }
