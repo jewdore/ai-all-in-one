@@ -83,20 +83,40 @@ export const FeedTask= async (ids:string[])=>{
 
 export const FeedTaskyun= async (ids:string[])=>{
     const sunoS = new sunoStore();
-    if(ids.length<=0) return;
+    for(let i=0;i<50;i++){
+        let resp:any = await sunoFetch('/suno/fetch/'+ ids.join(','));
+        mlog('FeedTask',resp )
+        if(resp.code=="success" && resp.data.status == "SUCCESS") {
+            homeStore.setMyData({act:'FeedTask'});
+            return;
+        }
 
-    let resp:any = await sunoFetch('/suno/fetch/'+ ids.join(','));
-    mlog('FeedTask',resp )
-    if (resp.code!="success" || resp.data.status !== "SUCCESS"){
+        if(resp.code=="success" && resp.data.status == "FAILURE") {
+            let failMsg = ""
+            resp.data.data.forEach( (item:SunoMedia) =>{
+                if(!item.id){
+                    return;
+                }
+                sunoS.delete( item)
+                if(item.status == 'FAILURE'){
+                    failMsg = item.id + " " + item.metadata.error_message
+                }
+            });
+            homeStore.setMyData({act:'FeedTask'});
+            homeStore.myData.ms &&  homeStore.myData.ms.error(failMsg )
+            throw new Error( failMsg);
+        }
+
+
+        resp.data.data.forEach( (item:SunoMedia) =>{
+            if(!item.id){
+                return;
+            }
+            sunoS.save( item)
+        });
         homeStore.setMyData({act:'FeedTask'});
         await sleep(5*1020 );
-        FeedTaskyun(ids)
-        return;
     }
-    homeStore.setMyData({act:'FeedTask'});
-    resp.data.data.forEach( (item:SunoMedia) =>{
-        sunoS.save( item)
-    });
 }
 
 export const sunoFetch=(url:string,data?:any,opt2?:any )=>{
